@@ -1,6 +1,6 @@
 *.pyc
 *~
-.idea
+.idea/
 __pycache__
 django_girls_3.14.2
 db.sqlite3
