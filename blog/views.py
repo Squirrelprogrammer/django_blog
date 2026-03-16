@@ -1,3 +1,5 @@
+from django.http import HttpRequest, HttpResponse
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
@@ -5,17 +7,17 @@ from blog.forms import PostForm
 from blog.models import Post
 
 
-def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+def post_list(request: HttpRequest) -> HttpResponse:
+    posts: QuerySet[Post] = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
+    post: Post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post': post})
 
 
-def post_new(request):
+def post_new(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
@@ -29,7 +31,7 @@ def post_new(request):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 
-def post_edit(request, pk):
+def post_edit(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
