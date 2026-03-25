@@ -1,10 +1,35 @@
+from typing import Type, Sequence
+
 from django.http import HttpRequest, HttpResponse
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from rest_framework import viewsets, permissions
+from rest_framework.serializers import BaseSerializer
 
 from blog.forms import PostForm
 from blog.models import Post
+from blog.serializers import PostsSerializer
+
+
+class PostsViewSet(viewsets.ModelViewSet):
+    queryset: QuerySet = Post.objects.all()
+    serializer_class: Type[PostsSerializer]  = PostsSerializer
+    permission_classes: Sequence[Type[permissions.BasePermission]] = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer: BaseSerializer) -> None:
+        if self.request.user.is_authenticated:
+            serializer.save(
+                author=self.request.user,
+                created_date=timezone.now()
+            )
+
+    def perform_update(self, serializer: BaseSerializer) -> None:
+        if self.request.user.is_authenticated:
+            serializer.save(
+                author=self.request.user,
+                published_date=timezone.now()
+            )
 
 
 def post_list(request: HttpRequest) -> HttpResponse:
