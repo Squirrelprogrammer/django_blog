@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.urls.resolvers import RoutePattern
-from rest_framework import routers
+from rest_framework import routers, urls as auth_urls
 
 from blog.views import PostsViewSet
 
@@ -29,4 +29,5 @@ urlpatterns: list[RoutePattern]= [
     path('admin/', admin.site.urls),
     # path('', include('blog.urls')),
     path('api/', include(router.urls)),
+    path('api/blog-auth/', include(auth_urls)),
 ]
