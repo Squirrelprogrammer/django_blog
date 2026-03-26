@@ -19,17 +19,11 @@ class PostsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer: BaseSerializer) -> None:
         if self.request.user.is_authenticated:
-            serializer.save(
-                author=self.request.user,
-                created_date=timezone.now()
-            )
+            serializer.save(created_date=timezone.now(), published_date=timezone.now())
 
     def perform_update(self, serializer: BaseSerializer) -> None:
         if self.request.user.is_authenticated:
-            serializer.save(
-                author=self.request.user,
-                published_date=timezone.now()
-            )
+            serializer.save(published_date=timezone.now())
 
 
 def post_list(request: HttpRequest) -> HttpResponse:
