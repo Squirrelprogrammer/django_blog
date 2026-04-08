@@ -27,7 +27,7 @@ router.register('posts', PostsViewSet)
 
 urlpatterns: list[RoutePattern]= [
     path('admin/', admin.site.urls),
-    # path('', include('blog.urls')),
+    path('', include('blog.urls')),
     path('api/', include(router.urls)),
     path('api/blog-auth/', include(auth_urls)),
 ]
